@@ -4,6 +4,12 @@ const board = [
     ["", "", ""]
   ];
   
+const player1 = {
+    name: undefined,
+    marker: "X",
+    color: "bg-success",
+    
+}
   // win states
   const winningCombinations = [
 
