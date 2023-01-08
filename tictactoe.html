@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe</title>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Style the board */
+        .board {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          grid-template-rows: repeat(3, 1fr);
+          grid-gap: 10px;
+          width: 300px;
+          height: 300px;
+          margin: 0 auto;
+          
+        }
+        /* Style the cells */
+        .cell {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 48px;
+          font-weight: bold;
+          color: black;
+          border: 2px solid black
+        }
+      </style>
+</head>
+<body>
+    <header class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow-lg">
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 text-light" href="#">Tic Tac Toe</a>
+        <div id="whose-turn" class="nav-item text-nowrap text-light text-center"></div>
+        <div class="navbar-nav">
+          
+          <div class="nav-item text-nowrap">
+            <button id="forfeit"class="btn btn-outline-danger text-secondary nav-link m-1 px-3 rounded-0" action="#">Forfeit</button>
+          </div>
+        </div>
+      </header>
+    <div id="page" class="bg-dark">
+    <div class="container vh-33">
+        <br>
+        <br>
+        <div class="card shadow-lg bg-light h-100 mh-50 rounded-0">
+            <div class="card-body">
+                <div id="board" class="container vh-50 vw-50">
+                    <div class="cell" id="cell-0"></div>
+                    <div class="cell" id="cell-1"></div>
+                    <div class="cell" id="cell-2"></div>
+                    <div class="cell" id="cell-3"></div>
+                    <div class="cell" id="cell-4"></div>
+                    <div class="cell" id="cell-5"></div>
+                    <div class="cell" id="cell-6"></div>
+                    <div class="cell" id="cell-7"></div>
+                    <div class="cell" id="cell-8"></div>
+
+                  </div>
+            </div>
+        </div>
+        <br>
+        <br>
+    </div>
+</div>
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <script src="code.js"></script>
+</body>
+</html>
