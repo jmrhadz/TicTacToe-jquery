@@ -1,15 +1,9 @@
-const board = [
+let board = [
     ["", "", ""],
     ["", "", ""],
     ["", "", ""]
   ];
   
-const player1 = {
-    name: undefined,
-    marker: "X",
-    color: "bg-success",
-
-}
   // win states
   const winningCombinations = [
 
@@ -43,27 +37,33 @@ const player1 = {
     [2,2]
 ]
 
-// reset game
-function newGame(){
 
-    const board = [
-        ["", "", ""],
-        ["", "", ""],
-        ["", "", ""]
-      ];
+
+// reset game
+function newGame(buttonReset, computer){
+    if(!buttonReset){
+        newGameButton();
+    }
+    drawBoard();
+    buildCells();
+    
 
  //randomize starting player
-  currentPlayer = (Math.floor(Math.random()*2)>0) ? "X" : "O";
-  console.log(currentPlayer, "'s turn")
+    let randomPlayer = Math.floor(Math.random()*100)
+    console.log(randomPlayer)
+    currentPlayer = (randomPlayer > 0 && randomPlayer % 2 == 1) ? "X" : "O";
+    console.log(currentPlayer, "'s turn")
 
-  //check if playing against a computer
-  player2 = true;
+    //check if playing against a computer
+    
+    player2 = computer ? false : true;
 
-  //computer starts?
-  if(currentPlayer == "O" && !player2){
-    makeComputerMove();
-  }
+    //computer starts?
+    if(currentPlayer == "O" && !player2){
+        makeComputerMove();
+    }
 
+    $('#whose-turn').text(`${currentPlayer}'s turn...`)
 }
 
 
@@ -106,82 +106,85 @@ function getRowColFromIndex(cell){
  
   
   // check board for win states
-  function checkForWin() {
+function checkForWin() {
 
     for (let i = 0; i < winningCombinations.length; i++) {
-      let combination = winningCombinations[i];
-      let [a, b, c] = combination;
-      let [rowA, colA] = a;
-      let [rowB, colB] = b;
-      let [rowC, colC] = c;
-      if (board[rowA][colA] === currentPlayer && board[rowB][colB] === currentPlayer && board[rowC][colC] === currentPlayer) {
-        return true;
-      }
+        let combination = winningCombinations[i];
+        let [a, b, c] = combination;
+        let [rowA, colA] = a;
+        let [rowB, colB] = b;
+        let [rowC, colC] = c;
+        if (board[rowA][colA] === currentPlayer && board[rowB][colB] === currentPlayer && board[rowC][colC] === currentPlayer) {
+                return true;
+        }
     }
 
     return false;
 
-  }
+}
   
   // check board for tie
-  function checkForTie() {
+function checkForTie() {
 
     for (let i = 0; i < board.length; i++) {
-      for (let j = 0; j < board[i].length; j++) {
+        for (let j = 0; j < board[i].length; j++) {
         if (board[i][j] === "") {
-          return false;
+            return false;
         }
-      }
+        }
     }
 
-    return true;
+return true;
 
-  }
+}
   
   // handle the computer move using RNG
-  function makeComputerMove() {
+function makeComputerMove() {
 
     let cell = Math.floor(Math.random() * 9);
     let [row, col] = getRowColFromIndex(cell);
 
     if (board[row][col] === "") {
-      handleMove(row, col, cell);
+        handleMove(row, col, cell);
     } else {
-      makeComputerMove();
+        makeComputerMove();
     }
 
-  }
+}
   
   // handle current turn
-  function handleMove(row, col, cell) {
+function handleMove(row, col, cell) {
 
     // if move isn't valid, do nothing
     if (board[row][col] !== "") {
-      return;
+        return;
     }
 
     // otherwise make move
-    legalMove(row,col, cell);
-    
+    legalMove(row,col);
+
 
     // check for win
     if (checkForWin()) {
-      console.log(`Player ${currentPlayer} wins!`);
-      $('.cell').off('click');
-      // displaye winning player
-      return;
+        console.log(`Player ${currentPlayer} wins!`);
+        $('.cell').off('click');
+        // displaye winning player
+        $('#whose-turn').html(`<h1 class="display-1"> ${currentPlayer} wins!</h1>`)
+        return;
     }
 
     // check for tie
     if (checkForTie()) {
-      console.log("Tie game!");
-      $('.cell').off('click');
-      // display tie
-      return;
+        console.log("Tie game!");
+        $('.cell').off('click');
+        // display tie
+        $('#whose-turn').html(`<h1 class="display-1">Tie Game!</h1>`)
+        return;
     }
 
     // switch player
     currentPlayer = (currentPlayer === "X") ? "O" : "X";
+    $('#whose-turn').text(`${currentPlayer}'s turn...`)
 
     //display board
     console.table(board)
@@ -197,14 +200,38 @@ function getRowColFromIndex(cell){
     }
 
     return true;
-  }
+}
 
-  function legalMove(row, col){
-        board[row][col] = currentPlayer;
+// make move and redraw board
+function legalMove(row, col){
+    board[row][col] = currentPlayer;
+    drawBoard();
+}
+
+// add click listner to new game button (formerly a forfeit button, RIP all those extras I'd coded)
+function newGameButton(){
+    $('#forfeit').click(e=> {
+        board = [
+            ["", "", ""],
+            ["", "", ""],
+            ["", "", ""]
+        ];
         drawBoard();
-  }
+        // passes in true to avoid calling newGameButton immediately
+        newGame(true);
+    })
+    $('#whose-turn').click(()=>{
+        board = [
+            ["", "", ""],
+            ["", "", ""],
+            ["", "", ""]
+        ];
+        drawBoard();
+        console.log("switching to computer..")
+        newGame(true, true);
+    })
 
-  //handleMove(1,1)
+}
 
-buildCells();
+
 newGame();
