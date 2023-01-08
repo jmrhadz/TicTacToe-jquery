@@ -4,6 +4,12 @@ const board = [
     ["", "", ""]
   ];
   
+const player1 = {
+    name: undefined,
+    marker: "X",
+    color: "bg-success",
+
+}
   // win states
   const winningCombinations = [
 
@@ -39,6 +45,12 @@ const board = [
 
 // reset game
 function newGame(){
+
+    const board = [
+        ["", "", ""],
+        ["", "", ""],
+        ["", "", ""]
+      ];
 
  //randomize starting player
   currentPlayer = (Math.floor(Math.random()*2)>0) ? "X" : "O";
@@ -76,7 +88,11 @@ function buildCells(){
 function drawBoard(){
     let flatBoard = [...board[0],...board[1],...board[2]]
     for(let i = 0; i < 9; i++){
-        $(`#cell-${i}`).html(`<p>${flatBoard[i]}<p>`)
+        if(flatBoard[i]){
+            $(`#cell-${i}`).html(`<p>${flatBoard[i]}<p>`)
+        }else{
+            $(`#cell-${i}`).html(`<p>⬞<p>`)
+        }
     }
 }
  
