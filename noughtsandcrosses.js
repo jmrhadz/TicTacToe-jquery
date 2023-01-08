@@ -1,3 +1,11 @@
+/*README****
+I wrote the first half of this with Covid, and it turned into spaghetti code.
+It did run pretty well at one point, but broke when I started to add the Computer class.
+From here on out, I'll push to git periodically for the version control. 
+*/
+
+
+
 //Ｏ, Ｘ, ＀
 const markerX = "Ｘ"
 const markerO = "Ｏ"
@@ -7,6 +15,54 @@ const names = ["Jim", "Huck", "Tom", "Sally", "Polly", "Judge", "Joe"]
 const colors = ["bg-primary", "bg-success", "bg-info", "bg-caution"]
 const markers = [markerX,markerO]
 let iterator = 0;
+
+class Computer{
+    constructor(player){
+        this.name = player.name;
+        this.color = player.color;
+        this.difficulty;
+        this.marker = player.marker;
+    }
+
+    //check if move is legal
+    checkMove(row, col, board){
+        if(!board[row][col]){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    //check for available moves
+    checkForAvailableMoves(board){
+        let availableMoves = [];
+        board.map((row, i) => row.map((col, j) => {
+            console.log(`checking ${i}, ${j}`)
+            let isMoveAvailable = this.checkMove(i, j, board)
+            if(isMoveAvailable) availableMoves.push([[i][j]])
+            console.log(availableMoves)
+        }))
+        return availableMoves;
+    }
+
+    moveChoice(board){
+        let availableMoves = this.checkForAvailableMoves(board);
+        if(this.difficulty = "easy"){
+            let index = Math.floor(Math.random() * availableMoves.length)
+            console.log(index)
+            board[index] = this.marker
+            
+        }else{
+            let index
+        }
+    return board
+    }
+
+    makeMove(board){
+        return this.moveChoice(board)
+    }
+}
+
 // class Player
 class Player{
     //own props:
@@ -17,7 +73,7 @@ class Player{
         //player recor d = 0
         this.record = 0;
         //color
-        this.color = 
+        this.color = colors[Math.floor(Math.random() * 4)]
         this.marker = markers[iterator++]
     }
 
@@ -46,9 +102,9 @@ class Player{
 
     getPlayerColor(){
         //inputID
-        colors[Math.floor(Math.random * 4)]
         //set value as this.color
-        this.color = colors[iterator]
+        this.color = colors[Math.floor(Math.random() * 4)]
+        console.log(this.color)
     }
 }         
 
@@ -57,11 +113,11 @@ class Board{
     constructor(){
     //own props:
         //players
-        let players = [new Player(), new Player()]
+        // let players = [new Player(), new Player()]
         //player 1
-        this.player1 = players[0]
+        this.player1 = new Player();
         //player 2
-        this.player2 = players[1]
+        this.player2 = new Player();
         //player 2 difficulty/person
         this.player2Difficulty;
         //session score record
@@ -73,9 +129,9 @@ class Board{
         //board
         this.board = [];
         //current player
-        this.currentPlayer = this.player1;
+        this.currentPlayer = this.player1
         //next player
-        this.nextPlayer// = this.player2;
+        this.nextPlayer = this.player2
         //forfeit button
         this.forfeit = null;
         //total turns
@@ -92,6 +148,7 @@ class Board{
         //if number of players is 1
         $('#1-player').on('click',() => {
             $('#menu').empty();
+            this.player1.getPlayerColor();
             //append player 1 name input
             $('#menu').append('<input id="player-1-name" type="text" placeholder="Player One Name" class="rounded-0">')
             //append computer difficulty buttons
@@ -101,6 +158,8 @@ class Board{
                 if($('#player-1-name').val()){
                     this.player1.getPlayerName('player-1-name')
                     this.player2.randomPlayerName("easy");
+                    let p2 = new Computer(this.player2)
+                    this.player2 = p2;
                     $('#menu').empty();
                     //this.easyGame();
                     this.makeBoard();
@@ -121,6 +180,10 @@ class Board{
         //if number of players is 2
         $('#2-player').on('click',() => {
             $('#menu').empty();
+            this.player1.getPlayerColor();
+            do{
+                this.player2.getPlayerColor();
+            }while(this.player1.color != this.player2.color)
             //append player 1 name input
             $('#menu').html('<input id="player-1-name" type="text" placeholder="Player One Name" class="rounded-0"><input id="player-2-name" type="text" placeholder="Player Two Name" class="rounded-0"><div id="start-game" class="btn btn-success shadow-lg rounded-0 m-10">Start</div>')
            console.log($('#start-game').html())
@@ -131,8 +194,8 @@ class Board{
                     $('#menu').empty();
                     this.player1.getPlayerName('player-1-name');
                     this.player2.getPlayerName('player-2-name');
-                    console.log(this.player1, "p1")
-                    console.log(this.player2, "p2")
+                    console.log(this.player1.name, "p1")
+                    console.log(this.player2.name, "p2")
                     this.player2Difficulty = false;
                     //$('#menu').twoPlayerGame();
                     this.makeBoard();
@@ -279,6 +342,11 @@ class Board{
         $('#page').toggleClass(`${this.currentPlayer.color} ${this.nextPlayer.color}`)
         console.log(`Turn set: ${this.currentPlayer.name}
         color: ${this.currentPlayer.color}`)
+        if(this.currentPlayer instanceof Computer){
+            console.log("comp turn")
+            this.player2.makeMove(this.board);
+            this.setTurn(this.currentPlayer)
+        }
     }
 
     winnerAlert(boolArrays){ //takes nested arrays of boolean values to 
@@ -531,7 +599,7 @@ let btn = $('#forfeit')
 btn.click((e) => {
     console.log("Forfeit button clicked")
     $('#board').find('.clickable').off('click')
-    $('#board').before(`<h1 class="center-text">${game.currentPlayer.name} has forfeited<br>${game.nextPlayer.name} wins!</h1>`)
+    $('#board').before(`<h1 id="forfeit-true" class="alert center-text">${game.currentPlayer.name} has forfeited<br>${game.nextPlayer.name} wins!</h1>`)
     game.resetGame();
     
 })
